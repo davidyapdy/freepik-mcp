@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "freepik": {
+      "command": "node",
+      "args": ["dist/index.js"],
+      "env": {
+        "FREEPIK_API_KEY": "your_freepik_api_key_here"
+      }
+    }
+  }
+}
