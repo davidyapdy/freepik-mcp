@@ -1,5 +1,7 @@
 # Freepik MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@davidyapdy/freepik-mcp)](https://smithery.ai/server/@davidyapdy/freepik-mcp)
+
 An MCP (Model Context Protocol) server that provides access to the Freepik API for searching and retrieving stock images, vectors, and PSD files.
 
 ## Features
