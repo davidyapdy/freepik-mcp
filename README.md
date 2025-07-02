@@ -130,9 +130,48 @@ Get detailed information about a specific resource.
 Parameters:
 - `resource_id` (required): The ID of the resource
 
+## Claude Desktop Configuration
+
+To use this MCP server with Claude Desktop, add the following to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "freepik": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "freepik-mcp"
+      ],
+      "env": {
+        "FREEPIK_API_KEY": "your_freepik_api_key_here"
+      }
+    }
+  }
+}
+```
+
+### Manual Installation
+
+If you prefer to clone and run locally:
+
+```json
+{
+  "mcpServers": {
+    "freepik": {
+      "command": "node",
+      "args": ["path/to/freepik-mcp/dist/index.js"],
+      "env": {
+        "FREEPIK_API_KEY": "your_freepik_api_key_here"
+      }
+    }
+  }
+}
+```
+
 ## Smithery Configuration
 
-The `mcp.json` file is configured for Smithery. Update the `FREEPIK_API_KEY` environment variable with your actual API key.
+The `smithery.yaml` file is configured for Smithery. Update the `FREEPIK_API_KEY` environment variable with your actual API key.
 
 ## License
 
