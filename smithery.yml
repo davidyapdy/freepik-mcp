@@ -1,0 +1,54 @@
+name: freepik-mcp
+version: 1.0.0
+description: MCP server for Freepik API integration - search and retrieve stock images, vectors, and PSD files
+author: ""
+license: MIT
+homepage: ""
+repository: ""
+
+mcp:
+  command: node
+  args: ["dist/index.js"]
+  env:
+    FREEPIK_API_KEY: "{{FREEPIK_API_KEY}}"
+
+build:
+  include:
+    - "dist/**/*"
+    - "package.json"
+    - "README.md"
+  commands:
+    - npm install
+    - npm run build
+
+config:
+  schema:
+    type: object
+    properties:
+      FREEPIK_API_KEY:
+        type: string
+        title: Freepik API Key
+        description: Your Freepik API key from the developer dashboard
+        secret: true
+    required:
+      - FREEPIK_API_KEY
+
+tools:
+  - name: search_resources
+    description: Search for Freepik resources (images, vectors, PSDs) with various filters
+  - name: get_resource_details
+    description: Get detailed information about a specific Freepik resource
+
+categories:
+  - media
+  - search
+  - stock-images
+
+keywords:
+  - freepik
+  - stock images
+  - vectors
+  - psd
+  - photos
+  - search
+  - media
