@@ -27,12 +27,11 @@ interface FreepikResource {
 interface FreepikResponse {
   data: FreepikResource[];
   meta: {
-    pagination: {
-      page: number;
-      per_page: number;
-      total: number;
-      total_pages: number;
-    };
+    current_page: number;
+    per_page: number;
+    last_page: number;
+    total: number;
+    clean_search: boolean;
   };
 }
 
@@ -57,10 +56,10 @@ interface FreepikIconResponse {
   data: FreepikIcon[];
   meta: {
     pagination: {
-      page: number;
+      current_page: number;
       per_page: number;
+      last_page: number;
       total: number;
-      total_pages: number;
     };
   };
 }
@@ -942,7 +941,7 @@ class FreepikMCPServer {
       content: [
         {
           type: "text",
-          text: `Found ${response.data.meta.pagination.total} resources (showing page ${page} of ${response.data.meta.pagination.total_pages}):\n\n${resources
+          text: `Found ${response.data.meta.total} resources (showing page ${response.data.meta.current_page} of ${response.data.meta.last_page}):\n\n${resources
             .map(
               (r: any) =>
                 `**${r.title}**\n- ID: ${r.id}\n- Author: ${r.author}\n- License: ${r.license}\n- Image: ${r.image_url}\n- URL: ${r.url}`
@@ -1000,7 +999,7 @@ class FreepikMCPServer {
       content: [
         {
           type: "text",
-          text: `Found ${response.data.meta.pagination.total} icons (showing page ${page} of ${response.data.meta.pagination.total_pages}):\n\n${icons
+          text: `Found ${response.data.meta.pagination.total} icons (showing page ${response.data.meta.pagination.current_page} of ${response.data.meta.pagination.last_page}):\n\n${icons
             .map(
               (i: any) =>
                 `**${i.name}**\n- ID: ${i.id}\n- Author: ${i.author}\n- Family: ${i.family}\n- Tags: ${i.tags}\n- PNG: ${i.png_url}\n- SVG: ${i.svg_url}`
