@@ -36,6 +36,20 @@ config:
 tools:
   - name: search_resources
     description: Search for Freepik resources (images, vectors, PSDs) with various filters
+  - name: search_icons
+    description: Search for Freepik icons with various filters
+  - name: download_icon
+    description: Download a Freepik icon in specified format and size
+  - name: download_resource
+    description: Download a Freepik resource (photo, vector, PSD) by ID
+  - name: download_resource_format
+    description: Download a Freepik resource in a specific format
+  - name: generate_icon
+    description: Generate AI icons from text prompts using Freepik AI
+  - name: generate_icon_preview
+    description: Generate AI icon previews from text prompts
+  - name: render_generated_icon
+    description: Download generated AI icon in specified format
   - name: get_resource_details
     description: Get detailed information about a specific Freepik resource
 
@@ -43,6 +57,7 @@ categories:
   - media
   - search
   - stock-images
+  - ai-generation
 
 keywords:
   - freepik
@@ -52,3 +67,5 @@ keywords:
   - photos
   - search
   - media
+  - ai-generation
+  - icon-generation
