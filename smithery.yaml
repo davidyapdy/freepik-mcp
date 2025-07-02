@@ -22,16 +22,12 @@ build:
     - npm run build
 
 config:
-  schema:
-    type: object
-    properties:
-      FREEPIK_API_KEY:
-        type: string
-        title: Freepik API Key
-        description: Your Freepik API key from the developer dashboard
-        secret: true
-    required:
-      - FREEPIK_API_KEY
+  FREEPIK_API_KEY:
+    type: string
+    title: Freepik API Key
+    description: Your Freepik API key from the developer dashboard
+    secret: true
+    required: true
 
 tools:
   - name: search_resources
@@ -50,6 +46,34 @@ tools:
     description: Generate AI icon previews from text prompts
   - name: render_generated_icon
     description: Download generated AI icon in specified format
+  - name: generate_mystic
+    description: Generate high-resolution images using Freepik's Mystic AI workflow
+  - name: get_mystic_task
+    description: Get status and results of a Mystic generation task
+  - name: list_mystic_tasks
+    description: List all Mystic generation tasks
+  - name: generate_flux_dev
+    description: Generate images using Flux Dev AI model
+  - name: get_flux_dev_task
+    description: Get status and results of a Flux Dev generation task
+  - name: list_flux_dev_tasks
+    description: List all Flux Dev generation tasks
+  - name: reimagine_flux
+    description: Reimagine existing images using Flux AI (Beta)
+  - name: upscale_image
+    description: Upscale images using AI image upscaler
+  - name: get_upscaler_task
+    description: Get status and results of an image upscaler task
+  - name: list_upscaler_tasks
+    description: List all image upscaler tasks
+  - name: remove_background
+    description: Remove background from an image (Beta)
+  - name: expand_image
+    description: Expand an image using AI Flux Pro model
+  - name: get_expand_task
+    description: Get status and results of an image expand task
+  - name: list_expand_tasks
+    description: List all image expand tasks
   - name: get_resource_details
     description: Get detailed information about a specific Freepik resource
 
@@ -58,14 +82,22 @@ categories:
   - search
   - stock-images
   - ai-generation
+  - image-processing
 
 keywords:
   - freepik
-  - stock images
+  - stock-images
   - vectors
   - psd
   - photos
+  - icons
   - search
   - media
   - ai-generation
   - icon-generation
+  - image-upscaling
+  - background-removal
+  - image-expansion
+  - mystic
+  - flux
+  - text-to-image
