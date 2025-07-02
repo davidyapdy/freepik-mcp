@@ -1318,6 +1318,358 @@ class FreepikMCPServer {
     };
   }
 
+  private async generateFluxDev(args: any) {
+    const { prompt, webhook_url, aspect_ratio, styling, seed } = args;
+
+    const requestBody: FreepikFluxDevRequest = { prompt };
+    if (webhook_url) requestBody.webhook_url = webhook_url;
+    if (aspect_ratio) requestBody.aspect_ratio = aspect_ratio;
+    if (styling) requestBody.styling = styling;
+    if (seed) requestBody.seed = seed;
+
+    const response = await axios.post<FreepikAITaskResponse>(
+      `${this.baseUrl}/ai/text-to-image/flux-dev`,
+      requestBody,
+      {
+        headers: {
+          "x-freepik-api-key": this.apiKey,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const taskData = response.data.data;
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: `**Flux Dev Generation Started**\n\n- **Task ID**: ${taskData.task_id}\n- **Status**: ${taskData.status}\n- **Prompt**: ${prompt}\n- **Aspect Ratio**: ${aspect_ratio || 'square_1_1'}\n\n*AI image generation is running. Results will be available via webhook or task status check.*`,
+        },
+      ],
+    };
+  }
+
+  private async getFluxDevTask(args: any) {
+    const { task_id } = args;
+
+    const response = await axios.get<FreepikAITaskResponse>(
+      `${this.baseUrl}/ai/text-to-image/flux-dev/${task_id}`,
+      {
+        headers: {
+          "x-freepik-api-key": this.apiKey,
+        },
+      }
+    );
+
+    const taskData = response.data.data;
+    let statusText = `**Flux Dev Task Status**\n\n- **Task ID**: ${taskData.task_id}\n- **Status**: ${taskData.status}`;
+
+    if (taskData.generated && taskData.generated.length > 0) {
+      statusText += `\n\n**Generated Images:**\n${taskData.generated
+        .map((url, index) => `${index + 1}. ${url}`)
+        .join("\n")}`;
+    } else if (taskData.status === "COMPLETED") {
+      statusText += `\n\n*Task completed but no images were generated.*`;
+    } else {
+      statusText += `\n\n*Generation is still in progress.*`;
+    }
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: statusText,
+        },
+      ],
+    };
+  }
+
+  private async listFluxDevTasks(args: any) {
+    const response = await axios.get<FreepikAITasksResponse>(
+      `${this.baseUrl}/ai/text-to-image/flux-dev`,
+      {
+        headers: {
+          "x-freepik-api-key": this.apiKey,
+        },
+      }
+    );
+
+    const tasks = response.data.data;
+    const tasksList = tasks
+      .map((task, index) => `${index + 1}. **${task.task_id}** - Status: ${task.status}`)
+      .join("\n");
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: `**All Flux Dev Tasks**\n\n${tasksList || "*No tasks found.*"}`,
+        },
+      ],
+    };
+  }
+
+  private async reimagineFlux(args: any) {
+    const { image, prompt, webhook_url, imagination, aspect_ratio } = args;
+
+    const requestBody: FreepikReimagineFluxRequest = { image };
+    if (prompt) requestBody.prompt = prompt;
+    if (webhook_url) requestBody.webhook_url = webhook_url;
+    if (imagination) requestBody.imagination = imagination;
+    if (aspect_ratio) requestBody.aspect_ratio = aspect_ratio;
+
+    const response = await axios.post<FreepikAITaskResponse>(
+      `${this.baseUrl}/ai/beta/text-to-image/reimagine-flux`,
+      requestBody,
+      {
+        headers: {
+          "x-freepik-api-key": this.apiKey,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const taskData = response.data.data;
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: `**Reimagine Flux Started**\n\n- **Task ID**: ${taskData.task_id}\n- **Status**: ${taskData.status}\n- **Imagination Level**: ${imagination || 'default'}\n- **Aspect Ratio**: ${aspect_ratio || 'original'}\n\n*Image reimagining is running. This is a Beta feature.*`,
+        },
+      ],
+    };
+  }
+
+  private async upscaleImage(args: any) {
+    const {
+      image,
+      webhook_url,
+      scale_factor,
+      optimized_for,
+      prompt,
+      creativity,
+      hdr,
+      resemblance,
+      fractality,
+      engine,
+    } = args;
+
+    const requestBody: FreepikImageUpscalerRequest = { image };
+    if (webhook_url) requestBody.webhook_url = webhook_url;
+    if (scale_factor) requestBody.scale_factor = scale_factor;
+    if (optimized_for) requestBody.optimized_for = optimized_for;
+    if (prompt) requestBody.prompt = prompt;
+    if (creativity !== undefined) requestBody.creativity = creativity;
+    if (hdr !== undefined) requestBody.hdr = hdr;
+    if (resemblance !== undefined) requestBody.resemblance = resemblance;
+    if (fractality !== undefined) requestBody.fractality = fractality;
+    if (engine) requestBody.engine = engine;
+
+    const response = await axios.post<FreepikAITaskResponse>(
+      `${this.baseUrl}/ai/image-upscaler`,
+      requestBody,
+      {
+        headers: {
+          "x-freepik-api-key": this.apiKey,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const taskData = response.data.data;
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: `**Image Upscaling Started**\n\n- **Task ID**: ${taskData.task_id}\n- **Status**: ${taskData.status}\n- **Scale Factor**: ${scale_factor || 'default'}\n- **Optimization**: ${optimized_for || 'standard'}\n\n*AI image upscaling is running. Results will be available via webhook or task status check.*`,
+        },
+      ],
+    };
+  }
+
+  private async getUpscalerTask(args: any) {
+    const { task_id } = args;
+
+    const response = await axios.get<FreepikAITaskResponse>(
+      `${this.baseUrl}/ai/image-upscaler/${task_id}`,
+      {
+        headers: {
+          "x-freepik-api-key": this.apiKey,
+        },
+      }
+    );
+
+    const taskData = response.data.data;
+    let statusText = `**Upscaler Task Status**\n\n- **Task ID**: ${taskData.task_id}\n- **Status**: ${taskData.status}`;
+
+    if (taskData.generated && taskData.generated.length > 0) {
+      statusText += `\n\n**Upscaled Images:**\n${taskData.generated
+        .map((url, index) => `${index + 1}. ${url}`)
+        .join("\n")}`;
+    } else if (taskData.status === "COMPLETED") {
+      statusText += `\n\n*Task completed but no images were generated.*`;
+    } else {
+      statusText += `\n\n*Upscaling is still in progress.*`;
+    }
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: statusText,
+        },
+      ],
+    };
+  }
+
+  private async listUpscalerTasks(args: any) {
+    const response = await axios.get<FreepikAITasksResponse>(
+      `${this.baseUrl}/ai/image-upscaler`,
+      {
+        headers: {
+          "x-freepik-api-key": this.apiKey,
+        },
+      }
+    );
+
+    const tasks = response.data.data;
+    const tasksList = tasks
+      .map((task, index) => `${index + 1}. **${task.task_id}** - Status: ${task.status}`)
+      .join("\n");
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: `**All Upscaler Tasks**\n\n${tasksList || "*No tasks found.*"}`,
+        },
+      ],
+    };
+  }
+
+  private async removeBackground(args: any) {
+    const { image_url } = args;
+
+    const response = await axios.post<FreepikRemoveBackgroundResponse>(
+      `${this.baseUrl}/ai/beta/remove-background`,
+      `image_url=${encodeURIComponent(image_url)}`,
+      {
+        headers: {
+          "x-freepik-api-key": this.apiKey,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+
+    const result = response.data;
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: `**Background Removed Successfully**\n\n- **Original**: ${result.original}\n- **High Resolution**: ${result.high_resolution}\n- **Preview**: ${result.preview}\n- **Download URL**: ${result.url}\n\n*Note: URLs are temporary and valid for only 5 minutes.*`,
+        },
+      ],
+    };
+  }
+
+  private async expandImage(args: any) {
+    const { image, prompt, left, right, top, bottom, webhook_url } = args;
+
+    const requestBody: FreepikImageExpandRequest = { image };
+    if (prompt) requestBody.prompt = prompt;
+    if (left !== undefined) requestBody.left = left;
+    if (right !== undefined) requestBody.right = right;
+    if (top !== undefined) requestBody.top = top;
+    if (bottom !== undefined) requestBody.bottom = bottom;
+    if (webhook_url) requestBody.webhook_url = webhook_url;
+
+    const response = await axios.post<FreepikAITaskResponse>(
+      `${this.baseUrl}/ai/image-expand/flux-pro`,
+      requestBody,
+      {
+        headers: {
+          "x-freepik-api-key": this.apiKey,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const taskData = response.data.data;
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: `**Image Expansion Started**\n\n- **Task ID**: ${taskData.task_id}\n- **Status**: ${taskData.status}\n- **Expansion**: Left:${left||0} Right:${right||0} Top:${top||0} Bottom:${bottom||0}\n\n*AI image expansion using Flux Pro is running.*`,
+        },
+      ],
+    };
+  }
+
+  private async getExpandTask(args: any) {
+    const { task_id } = args;
+
+    const response = await axios.get<FreepikAITaskResponse>(
+      `${this.baseUrl}/ai/image-expand/flux-pro/${task_id}`,
+      {
+        headers: {
+          "x-freepik-api-key": this.apiKey,
+        },
+      }
+    );
+
+    const taskData = response.data.data;
+    let statusText = `**Expand Task Status**\n\n- **Task ID**: ${taskData.task_id}\n- **Status**: ${taskData.status}`;
+
+    if (taskData.generated && taskData.generated.length > 0) {
+      statusText += `\n\n**Expanded Images:**\n${taskData.generated
+        .map((url, index) => `${index + 1}. ${url}`)
+        .join("\n")}`;
+    } else if (taskData.status === "COMPLETED") {
+      statusText += `\n\n*Task completed but no images were generated.*`;
+    } else {
+      statusText += `\n\n*Expansion is still in progress.*`;
+    }
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: statusText,
+        },
+      ],
+    };
+  }
+
+  private async listExpandTasks(args: any) {
+    const response = await axios.get<FreepikAITasksResponse>(
+      `${this.baseUrl}/ai/image-expand/flux-pro`,
+      {
+        headers: {
+          "x-freepik-api-key": this.apiKey,
+        },
+      }
+    );
+
+    const tasks = response.data.data;
+    const tasksList = tasks
+      .map((task, index) => `${index + 1}. **${task.task_id}** - Status: ${task.status}`)
+      .join("\n");
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: `**All Expand Tasks**\n\n${tasksList || "*No tasks found.*"}`,
+        },
+      ],
+    };
+  }
+
   private async getResourceDetails(args: any) {
     const { resource_id } = args;
 
